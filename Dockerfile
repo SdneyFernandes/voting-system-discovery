@@ -1,23 +1,23 @@
-# Use uma imagem oficial do OpenJDK
-FROM openjdk:17-jdk-slim
-
-# Defina o diretório de trabalho no container
+# Estágio 1: Build da aplicação
+FROM maven:3.8.6-openjdk-17 AS builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copie o arquivo JAR da aplicação para o container
-COPY target/*.jar app.jar
+# Estágio 2: Imagem final
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 
-# Exponha a porta que será usada pelo serviço
 EXPOSE 8761
 
-# Variáveis de ambiente padrão
 ENV SERVER_PORT=8761
 ENV SPRING_APPLICATION_NAME=voting-system-discovery
-ENV EUREKA_CLIENT_REGISTER-WITH-EUREKA=false
-ENV EUREKA_CLIENT_FETCH-REGISTRY=false
-ENV EUREKA_SERVER_WAIT-TIME-IN-MS-WHEN-SYNC-EMPTY=0
+ENV EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+ENV EUREKA_CLIENT_FETCH_REGISTRY=false
+ENV EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
 ENV LOGGING_LEVEL_COM_NETFLIX_DISCOVERY=INFO
 ENV LOGGING_LEVEL_COM_NETFLIX_EUREKA=INFO
 
-# Comando para executar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
