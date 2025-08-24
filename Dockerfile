@@ -1,12 +1,11 @@
-# Estágio 1: Build da aplicação
-FROM maven:3.8.6-openjdk-17-slim AS builder
+# Versão mais compatível
+FROM maven:3.8.5-openjdk-17 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Estágio 2: Imagem final
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
