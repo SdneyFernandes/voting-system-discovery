@@ -1,5 +1,5 @@
 # Estágio 1: Build da aplicação
-FROM maven:3.8.6-openjdk-17 AS builder
+FROM maven:3.8.6-openjdk-17-slim AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
