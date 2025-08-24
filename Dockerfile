@@ -10,9 +10,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8761
-
-ENV SERVER_PORT=8761
+ENV SERVER_PORT=${PORT}
 ENV SPRING_APPLICATION_NAME=voting-system-discovery
 ENV EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
 ENV EUREKA_CLIENT_FETCH_REGISTRY=false
