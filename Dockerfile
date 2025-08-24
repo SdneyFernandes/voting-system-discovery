@@ -1,11 +1,12 @@
-# Versão para Java 21
-FROM maven:3.8.7-openjdk-21 AS builder
+# Build com Maven e Java 21
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:21-slim
+# Runtime com JDK 21 leve
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
